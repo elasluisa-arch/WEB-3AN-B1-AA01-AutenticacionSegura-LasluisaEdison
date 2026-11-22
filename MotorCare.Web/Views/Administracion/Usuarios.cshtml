@@ -9,6 +9,10 @@
 {
     <div class="alert alert-success" role="status">@message</div>
 }
+@if (TempData["ErrorAdministracion"] is string error)
+{
+    <div class="alert alert-danger" role="alert">@error</div>
+}
 
 <div class="table-responsive">
     <table class="table table-striped align-middle">
@@ -29,8 +33,15 @@
                     <td>@usuario.Correo</td>
                     <td>@usuario.RolActual</td>
                     <td>@(usuario.Habilitado ? "Habilitada" : "Deshabilitada")</td>
-                    <td>
+                    <td class="d-flex flex-wrap gap-2">
                         <a asp-action="EditarUsuario" asp-route-id="@usuario.Id" class="btn btn-sm btn-outline-primary">Editar</a>
+                        @if (usuario.Correo.EndsWith("@motorcare.test", StringComparison.OrdinalIgnoreCase) && usuario.RolActual == "Cliente")
+                        {
+                            <a asp-action="RestablecerContrasena" asp-route-id="@usuario.Id" class="btn btn-sm btn-outline-warning">Cambiar contraseña</a>
+                            <form asp-action="EliminarUsuario" asp-route-id="@usuario.Id" method="post" onsubmit="return confirm('¿Eliminar esta cuenta ficticia? Esta acción no se puede deshacer.');">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar cuenta ficticia</button>
+                            </form>
+                        }
                     </td>
                 </tr>
             }

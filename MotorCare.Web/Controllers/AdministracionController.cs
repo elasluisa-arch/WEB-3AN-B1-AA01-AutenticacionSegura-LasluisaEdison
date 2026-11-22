@@ -138,6 +138,98 @@ public sealed class AdministracionController(
         return RedirectToAction(nameof(Usuarios));
     }
 
+    [HttpGet]
+    public async Task<IActionResult> RestablecerContrasena(string id)
+    {
+        var user = await userManager.FindByIdAsync(id);
+        if (user is null)
+        {
+            return NotFound();
+        }
+
+        if (!await IsFictionalClientAsync(user))
+        {
+            return Forbid();
+        }
+
+        return View(new AdminRestablecerContrasenaViewModel
+        {
+            Id = user.Id,
+            Correo = user.Email ?? string.Empty
+        });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> RestablecerContrasena(AdminRestablecerContrasenaViewModel model)
+    {
+        var user = await userManager.FindByIdAsync(model.Id);
+        if (user is null)
+        {
+            return NotFound();
+        }
+
+        if (!await IsFictionalClientAsync(user))
+        {
+            return Forbid();
+        }
+
+        model.Correo = user.Email ?? string.Empty;
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        var token = await userManager.GeneratePasswordResetTokenAsync(user);
+        var result = await userManager.ResetPasswordAsync(user, token, model.NuevaContrasena);
+        if (!result.Succeeded)
+        {
+            AddIdentityErrors(result);
+            return View(model);
+        }
+
+        TempData["MensajeAdministracion"] = "La contraseña de la cuenta ficticia se cambió correctamente.";
+        return RedirectToAction(nameof(Usuarios));
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> EliminarUsuario(string id)
+    {
+        var user = await userManager.FindByIdAsync(id);
+        if (user is null)
+        {
+            return NotFound();
+        }
+
+        if (!await IsFictionalClientAsync(user) || user.Id == userManager.GetUserId(User))
+        {
+            return Forbid();
+        }
+
+        var result = await userManager.DeleteAsync(user);
+        if (!result.Succeeded)
+        {
+            var errors = string.Join("; ", result.Errors.Select(error => error.Description));
+            TempData["ErrorAdministracion"] = $"No se pudo eliminar la cuenta ficticia: {errors}";
+            return RedirectToAction(nameof(Usuarios));
+        }
+
+        TempData["MensajeAdministracion"] = "La cuenta ficticia se eliminó correctamente.";
+        return RedirectToAction(nameof(Usuarios));
+    }
+
+    private async Task<bool> IsFictionalClientAsync(ApplicationUser user)
+    {
+        if (user.Email?.EndsWith("@motorcare.test", StringComparison.OrdinalIgnoreCase) != true)
+        {
+            return false;
+        }
+
+        var roles = await userManager.GetRolesAsync(user);
+        return roles.Contains(Roles.Cliente) && !roles.Contains(Roles.Administrador);
+    }
+
     private void AddIdentityErrors(IdentityResult result)
     {
         foreach (var error in result.Errors)

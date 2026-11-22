@@ -82,8 +82,13 @@ Las direcciones `motorcare.test` son identificadores ficticios y no reciben corr
 - Cookies HttpOnly, Secure y SameSite=Lax; duración configurada de 30 minutos con renovación deslizante.
 - Perfil propio y cambio de contraseña con verificación de la contraseña actual.
 - Administración exclusiva para Administrador: listado de usuarios, cambio entre roles Cliente/Administrador y habilitación/deshabilitación.
+- Para cuentas ficticias Cliente con correo `@motorcare.test`, el administrador puede asignar una nueva contraseña o eliminar la cuenta. Las contraseñas existentes nunca se muestran y las cuentas reales o de Administrador no se pueden eliminar desde esa acción.
 - Protección contra quitar el rol o deshabilitar al último Administrador habilitado.
 - Recuperación de contraseña por correo SMTP real; los tokens de Identity vencen en dos horas y son de un solo uso.
+
+## Alcance del repositorio AA01
+
+Este repositorio implementa el módulo de autenticación segura y su administración de usuarios. No contiene el CRUD de mantenimientos; ese módulo debe integrarse desde el proyecto principal del taller si se requiere administrar órdenes o registros de mantenimiento.
 
 ## Pruebas y entrega académica
 

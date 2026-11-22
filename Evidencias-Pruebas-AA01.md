@@ -19,8 +19,8 @@
 | 6 | Restablecimiento con token válido | **Pendiente** | Requiere un buzón real de prueba y completar el formulario usando el enlace recibido. |
 | 7 | Token ausente, inválido, vencido o reutilizado | **Parcial** | Un enlace sin token y un token inventado para la cuenta ficticia mostraron «Enlace no válido o vencido» sin cambiar la contraseña. En una prueba anterior el estudiante confirmó el rechazo de un enlace reutilizado. No se esperó la expiración de un token real. |
 | 8 | Cliente intenta abrir URL administrativa | **Aprobado** | `/Administracion/Usuarios` mostró «Acceso denegado». |
-| 9 | Administrador modifica rol o estado de una cuenta | **Pendiente** | No se inició sesión como administrador ni se alteraron los permisos de cuentas existentes. |
-| 10 | Cliente intenta asignarse privilegios de administrador | **Pendiente** | No hay un flujo público de autoasignación; el intento funcional requiere verificar acciones administrativas con un contexto autorizado. |
+| 9 | Administrador modifica rol o estado de una cuenta | **Pendiente de prueba en interfaz** | La cuenta de Administrador indicada por el estudiante aparece habilitada con ese rol en la base local. El panel tiene acciones para cuentas Cliente ficticias, pero aún no se probaron desde una sesión de administrador. |
+| 10 | Cliente intenta asignarse privilegios de administrador | **Pendiente** | No hay un flujo público de autoasignación; falta comprobar desde la interfaz que un Cliente recibe acceso denegado a las acciones administrativas. |
 | 11 | Cambio de contraseña con clave actual errónea | **Aprobado** | El cambio fue rechazado y luego del ajuste de idioma el mensaje fue «La contraseña actual es incorrecta». Se verificó que aparezca una sola vez en el resumen del formulario y también se confirmó un cambio válido en la cuenta ficticia. |
 | 12 | Actualizar y abrir otra pestaña | **Aprobado, reportado por el estudiante** | El estudiante confirmó que la sesión se comparte en la pestaña normal y no se extiende a incógnito. |
 | 13 | Ventana de incógnito aislada | **Aprobado, reportado por el estudiante** | El estudiante confirmó que incógnito no comparte la sesión de navegación normal. |
@@ -48,5 +48,5 @@ Los dominios reservados `.test` no reciben correo. La aplicación se conectó a 
 ## Pendientes para cerrar la matriz
 
 1. El estudiante eligió no enviar un correo real; queda pendiente completar el restablecimiento con un entorno SMTP de pruebas controlado o con un buzón autorizado.
-2. Probar administración de roles/estado con una sesión autorizada de administrador. El estudiante dice haber iniciado sesión, pero el navegador de pruebas accesible desde Visual Studio sigue en la pantalla de login; verificar en el mismo contexto antes de editar el usuario ficticio y no modificar al último administrador.
+2. Probar desde la interfaz la edición de roles/estado y las acciones nuevas de cambio de contraseña/eliminación de usuarios ficticios Cliente con una sesión de Administrador. El correo indicado tiene el rol Admin en la base local, pero no se probaron estas acciones; no eliminar la cuenta de Administrador ni cuentas reales.
 3. Cerrar y volver a abrir el navegador para completar la persistencia de «Recordarme».
