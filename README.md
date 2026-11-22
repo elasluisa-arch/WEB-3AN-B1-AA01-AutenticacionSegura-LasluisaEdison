@@ -81,7 +81,8 @@ Las direcciones `motorcare.test` son identificadores ficticios y no reciben corr
 - Bloqueo temporal tras 3 intentos fallidos durante 15 minutos; el inicio de sesión mantiene un mensaje genérico, incluso durante el bloqueo.
 - Cookies HttpOnly, Secure y SameSite=Lax; duración configurada de 30 minutos con renovación deslizante.
 - Perfil propio y cambio de contraseña con verificación de la contraseña actual.
-- Administración exclusiva para Administrador: listado de usuarios, cambio entre roles Cliente/Administrador y habilitación/deshabilitación.
+- Administración exclusiva para Administrador: crear usuarios con rol Cliente o Administrador, listar cuentas, cambiar roles y habilitar/deshabilitar.
+- Al crear una cuenta, el administrador define una contraseña inicial que cumple la política configurada y debe comunicarla al usuario por un medio seguro.
 - Para cuentas ficticias Cliente con correo `@motorcare.test`, el administrador puede asignar una nueva contraseña o eliminar la cuenta. Las contraseñas existentes nunca se muestran y las cuentas reales o de Administrador no se pueden eliminar desde esa acción.
 - Protección contra quitar el rol o deshabilitar al último Administrador habilitado.
 - Recuperación de contraseña por correo SMTP real; los tokens de Identity vencen en dos horas y son de un solo uso.

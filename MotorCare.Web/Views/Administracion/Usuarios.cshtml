@@ -4,7 +4,10 @@
     ViewData["Title"] = "Administrar usuarios";
 }
 
-<h1>Administrar usuarios</h1>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>Administrar usuarios</h1>
+    <a asp-action="CrearUsuario" class="btn btn-primary">Crear usuario</a>
+</div>
 @if (TempData["MensajeAdministracion"] is string message)
 {
     <div class="alert alert-success" role="status">@message</div>

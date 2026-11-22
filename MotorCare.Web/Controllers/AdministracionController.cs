@@ -43,6 +43,64 @@ public sealed class AdministracionController(
     }
 
     [HttpGet]
+    public IActionResult CrearUsuario()
+    {
+        return View(new AdminCrearUsuarioViewModel());
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CrearUsuario(AdminCrearUsuarioViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        if (!await roleManager.RoleExistsAsync(model.Rol))
+        {
+            ModelState.AddModelError(nameof(model.Rol), "Selecciona un rol existente.");
+            return View(model);
+        }
+
+        var correo = model.Correo.Trim();
+        var user = new ApplicationUser
+        {
+            Nombrecompleto = model.NombreCompleto.Trim(),
+            UserName = correo,
+            Email = correo,
+            Habilitado = true,
+            FechaRegistro = DateTime.UtcNow
+        };
+
+        var createResult = await userManager.CreateAsync(user, model.Contrasena);
+        if (!createResult.Succeeded)
+        {
+            AddIdentityErrors(createResult);
+            return View(model);
+        }
+
+        var roleResult = await userManager.AddToRoleAsync(user, model.Rol);
+        if (!roleResult.Succeeded)
+        {
+            var deleteResult = await userManager.DeleteAsync(user);
+            var roleErrors = string.Join("; ", roleResult.Errors.Select(error => error.Description));
+            if (!deleteResult.Succeeded)
+            {
+                var cleanupErrors = string.Join("; ", deleteResult.Errors.Select(error => error.Description));
+                throw new InvalidOperationException(
+                    $"No se pudo asignar el rol a la cuenta creada ({roleErrors}) ni eliminar la cuenta incompleta ({cleanupErrors}).");
+            }
+
+            AddIdentityErrors(roleResult);
+            return View(model);
+        }
+
+        TempData["MensajeAdministracion"] = "El usuario se creó correctamente con el rol seleccionado.";
+        return RedirectToAction(nameof(Usuarios));
+    }
+
+    [HttpGet]
     public async Task<IActionResult> EditarUsuario(string id)
     {
         var user = await userManager.FindByIdAsync(id);
