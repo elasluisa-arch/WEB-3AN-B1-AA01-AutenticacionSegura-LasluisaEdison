@@ -1,0 +1,33 @@
+﻿@{
+    ViewData["Title"] = "Inicio";
+}
+
+<section class="hero-panel">
+    <div class="hero-copy">
+        <div class="hero-kicker">Ensigma · Taller mecánico</div>
+        <h1>Tu taller,<br />siempre en buenas manos.</h1>
+        <p>Accede de forma segura a MotorCare para gestionar tu cuenta y mantener protegida tu información.</p>
+        <div class="hero-actions">
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <a asp-controller="Perfil" asp-action="Index" class="btn btn-primary">Ir a mi perfil</a>
+                @if (User.IsInRole("Administrador"))
+                {
+                    <a asp-controller="Administracion" asp-action="Usuarios" class="btn btn-outline-light">Administrar usuarios</a>
+                }
+            }
+            else
+            {
+                <a asp-controller="Cuenta" asp-action="IniciarSesion" class="btn btn-primary">Iniciar sesión</a>
+                <a asp-controller="Cuenta" asp-action="Registro" class="btn btn-outline-light">Crear cuenta</a>
+            }
+        </div>
+    </div>
+    <img src="~/images/logo-taller.svg" class="hero-logo" alt="Emblema de Ensigma Taller Mecánico" />
+</section>
+
+<section class="info-strip" aria-label="Información de MotorCare">
+    <div class="info-item"><strong>Acceso protegido</strong><span>Tu cuenta está resguardada por autenticación segura.</span></div>
+    <div class="info-item"><strong>Tu información</strong><span>Consulta y actualiza tus datos desde tu perfil.</span></div>
+    <div class="info-item"><strong>Soporte del taller</strong><span>Ensigma Taller Mecánico · MotorCare.</span></div>
+</section>

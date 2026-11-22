@@ -1,0 +1,26 @@
+@model RecuperarContrasenaViewModel
+
+@{
+    ViewData["Title"] = "Recuperar contraseña";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5 account-panel p-4 p-md-5">
+        <h1 class="mb-4">Recuperar contraseña</h1>
+        <p>Ingresa el correo asociado a tu cuenta. Si corresponde a una cuenta habilitada, enviaremos un enlace de recuperación.</p>
+        <form asp-action="RecuperarContrasena" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+            <div class="mb-3">
+                <label asp-for="Correo" class="form-label"></label>
+                <input asp-for="Correo" class="form-control" autocomplete="email" />
+                <span asp-validation-for="Correo" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Enviar enlace</button>
+            <a asp-action="IniciarSesion" class="btn btn-secondary">Volver</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

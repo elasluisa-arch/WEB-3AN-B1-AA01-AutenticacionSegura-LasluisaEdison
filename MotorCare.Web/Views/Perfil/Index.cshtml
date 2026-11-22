@@ -1,0 +1,58 @@
+@model PerfilViewModel
+
+@{
+    ViewData["Title"] = "Mi perfil";
+}
+
+<h1>Mi perfil</h1>
+@if (TempData["MensajePerfil"] is string message)
+{
+    <div class="alert alert-success" role="status">@message</div>
+}
+
+<div class="row g-4">
+    <section class="col-md-6 account-panel p-4" aria-labelledby="datos-heading">
+        <h2 id="datos-heading">Datos de la cuenta</h2>
+        <form asp-action="Actualizar" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+            <div class="mb-3">
+                <label asp-for="Correo" class="form-label"></label>
+                <input asp-for="Correo" class="form-control" readonly />
+            </div>
+            <div class="mb-3">
+                <label asp-for="FechaRegistro" class="form-label">Fecha de registro</label>
+                <input value="@Model.FechaRegistro.ToLocalTime().ToString("g")" class="form-control" readonly />
+            </div>
+            <div class="mb-3">
+                <label asp-for="NombreCompleto" class="form-label"></label>
+                <input asp-for="NombreCompleto" class="form-control" autocomplete="name" />
+                <span asp-validation-for="NombreCompleto" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar perfil</button>
+        </form>
+    </section>
+
+    <section class="col-md-6 account-panel p-4" aria-labelledby="password-heading">
+        <h2 id="password-heading">Cambiar contraseña</h2>
+        <form asp-action="CambiarContrasena" method="post">
+            <div asp-validation-summary="All" class="text-danger" role="alert"></div>
+            <div class="mb-3">
+                <label for="ContrasenaActual" class="form-label">Contraseña actual</label>
+                <input id="ContrasenaActual" name="ContrasenaActual" type="password" class="form-control" autocomplete="current-password" required />
+            </div>
+            <div class="mb-3">
+                <label for="NuevaContrasena" class="form-label">Nueva contraseña</label>
+                <input id="NuevaContrasena" name="NuevaContrasena" type="password" class="form-control" autocomplete="new-password" required />
+            </div>
+            <div class="mb-3">
+                <label for="ConfirmarContrasena" class="form-label">Confirmar nueva contraseña</label>
+                <input id="ConfirmarContrasena" name="ConfirmarContrasena" type="password" class="form-control" autocomplete="new-password" required />
+            </div>
+            <button type="submit" class="btn btn-primary">Cambiar contraseña</button>
+        </form>
+    </section>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

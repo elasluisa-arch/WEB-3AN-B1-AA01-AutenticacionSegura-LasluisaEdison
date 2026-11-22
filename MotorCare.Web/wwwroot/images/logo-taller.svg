@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Ensigma Taller Mecánico</title>
+  <desc id="desc">Emblema de engranaje con el nombre del taller y herramientas cruzadas.</desc>
+  <g fill="none" stroke="#17232f" stroke-linecap="square">
+	<circle cx="256" cy="256" r="184" stroke-width="28" />
+	<circle cx="256" cy="256" r="139" stroke-width="12" />
+	<path d="M256 20v40M256 452v40M20 256h40M452 256h40M89 89l28 28M395 395l28 28M423 89l-28 28M117 395l-28 28M165 35l12 38M335 439l12 38M35 165l38 12M439 335l38 12M347 35l-12 38M177 439l-12 38M477 165l-38 12M73 335l-38 12M208 24l6 40M298 448l6 40M24 208l40 6M448 298l40 6M304 24l-6 40M214 448l-6 40M488 208l-40 6M64 298l-40 6" stroke-width="18" />
+  </g>
+  <path d="M48 224h416v64H48z" fill="#f6f5f1" />
+  <path d="M48 218h416M48 294h416" stroke="#f36b37" stroke-width="8" />
+  <text x="256" y="170" text-anchor="middle" fill="#17232f" font-family="Arial,sans-serif" font-size="42" font-weight="800" letter-spacing="3">ENSIGMA</text>
+  <text x="256" y="268" text-anchor="middle" fill="#17232f" font-family="Arial,sans-serif" font-size="35" font-weight="900" letter-spacing="-1">TALLER MECÁNICO</text>
+  <g fill="none" stroke="#17232f" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+	<path d="M224 348l64 64m-59-75l15 15m30 30l15 15m-38-50l-44 44m-4-10l20-20m-10 34l20-20m43-20l-20 20m34-34l-14 14" />
+	<path d="M212 334l12-12 17 17-12 12m47 47l12-12 17 17-12 12" />
+  </g>
+</svg>

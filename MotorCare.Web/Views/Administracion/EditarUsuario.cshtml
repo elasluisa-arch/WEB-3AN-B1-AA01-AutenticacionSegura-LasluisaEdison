@@ -1,0 +1,33 @@
+@model AdminUsuarioViewModel
+
+@{
+    ViewData["Title"] = "Editar usuario";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6 account-panel p-4 p-md-5">
+        <h1>Editar usuario</h1>
+        <p><strong>Nombre:</strong> @Model.NombreCompleto</p>
+        <p><strong>Correo:</strong> @Model.Correo</p>
+        <p><strong>Rol actual:</strong> @Model.RolActual</p>
+
+        <form asp-action="EditarUsuario" method="post">
+            <input asp-for="Id" type="hidden" />
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+            <div class="mb-3">
+                <label asp-for="Rol" class="form-label"></label>
+                <select asp-for="Rol" class="form-select">
+                    <option value="Cliente">Cliente</option>
+                    <option value="Administrador">Administrador</option>
+                </select>
+                <span asp-validation-for="Rol" class="text-danger"></span>
+            </div>
+            <div class="form-check mb-3">
+                <input asp-for="Habilitado" class="form-check-input" />
+                <label asp-for="Habilitado" class="form-check-label"></label>
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+            <a asp-action="Usuarios" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+</div>

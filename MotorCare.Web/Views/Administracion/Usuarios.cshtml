@@ -1,0 +1,39 @@
+@model IReadOnlyList<AdminUsuarioViewModel>
+
+@{
+    ViewData["Title"] = "Administrar usuarios";
+}
+
+<h1>Administrar usuarios</h1>
+@if (TempData["MensajeAdministracion"] is string message)
+{
+    <div class="alert alert-success" role="status">@message</div>
+}
+
+<div class="table-responsive">
+    <table class="table table-striped align-middle">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th>Rol</th>
+                <th>Estado</th>
+                <th><span class="visually-hidden">Acciones</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var usuario in Model)
+            {
+                <tr>
+                    <td>@usuario.NombreCompleto</td>
+                    <td>@usuario.Correo</td>
+                    <td>@usuario.RolActual</td>
+                    <td>@(usuario.Habilitado ? "Habilitada" : "Deshabilitada")</td>
+                    <td>
+                        <a asp-action="EditarUsuario" asp-route-id="@usuario.Id" class="btn btn-sm btn-outline-primary">Editar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

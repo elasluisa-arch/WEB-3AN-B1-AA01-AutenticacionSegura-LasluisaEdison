@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="MotorCare.Business/MotorCare.Business.csproj" />
+  <Project Path="MotorCare.Data/MotorCare.Data.csproj" />
+  <Project Path="MotorCare.Infrastructure/MotorCare.Infrastructure.csproj" />
+  <Project Path="MotorCare.Web/MotorCare.Web.csproj" />
+</Solution>

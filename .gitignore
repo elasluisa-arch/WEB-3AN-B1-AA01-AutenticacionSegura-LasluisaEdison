@@ -1,0 +1,16 @@
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+.playwright-mcp/
+
+# .NET build outputs
+**/bin/
+**/obj/
+
+# Local development settings (may contain credentials or machine-specific values)
+**/appsettings.Development.json
+
+# User Secrets stay outside the repository; never copy them here.
