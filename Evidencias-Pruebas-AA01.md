@@ -11,7 +11,7 @@
 
 | N.º | Caso indicado por la actividad | Resultado | Evidencia / observación |
 |---:|---|---|---|
-| 1 | Registro válido de Cliente | **Aprobado, rol pendiente de verificación directa** | Se registró una cuenta ficticia nueva y la aplicación inició sesión y redirigió a Inicio. El flujo asigna el rol Cliente en el código; no se consultó la fila de roles en la base. |
+| 1 | Registro válido de Cliente | **Aprobado** | Se registró una cuenta ficticia nueva y la aplicación inició sesión y redirigió a Inicio. Una consulta SQL de solo lectura confirmó que ambas cuentas ficticias tienen el rol Cliente almacenado. |
 | 2 | Correo duplicado o contraseña inválida | **Aprobado** | El correo duplicado se rechazó y la contraseña débil no creó una cuenta. Los errores se muestran ahora en español. |
 | 3 | Inicio de sesión válido y logout | **Aprobado** | Inicio correcto; cierre redirigió a Inicio de sesión. Sin sesión, `/Perfil` redirigió al formulario de acceso. El perfil permitió guardar un cambio de nombre ficticio y mostró el dato actualizado. |
 | 4 | Contraseña incorrecta repetida y bloqueo | **Aprobado** | El tercer intento fallido activa el bloqueo. Se repitió después del ajuste: tanto el intento fallido que activa el bloqueo como el intento con la contraseña correcta mientras seguía bloqueada mostraron exactamente «Correo o contraseña incorrectos». La expiración automática y el acceso posterior ya se habían comprobado antes. |
@@ -38,6 +38,7 @@ Los dominios reservados `.test` no reciben correo. La aplicación se conectó a 
 ## Observaciones de la ejecución
 
 - La compilación de `MotorCare.Web.csproj` terminó correctamente antes y después de localizar los errores de Identity.
+- Una consulta SQL de solo lectura, limitada a las dos cuentas ficticias, confirmó que ambas tienen asignado el rol `Cliente`; no se consultaron hashes de contraseña ni se modificaron datos.
 - La primera ejecución reveló mensajes de Identity en inglés para correo duplicado, contraseña débil y contraseña actual incorrecta. Se agregó `SpanishIdentityErrorDescriber`; las repeticiones de esas validaciones mostraron mensajes en español.
 - El error repetido de consola se identificó en `/_vs/browserLink`: Chromium informa que la política de permisos bloquea `unload` en Browser Link de Visual Studio. No es una excepción de la aplicación; además Chromium emitió una advertencia de autofill para el formulario de contraseña. No se modificó código de la aplicación por esos avisos del entorno.
 - El primer intento del formulario de cambio de contraseña mostró dos resúmenes para un mismo error; se asoció el error al campo de contraseña actual. La compilación y una prueba posterior confirmaron que ahora aparece una sola vez en el resumen de ese formulario.
@@ -49,4 +50,3 @@ Los dominios reservados `.test` no reciben correo. La aplicación se conectó a 
 1. El estudiante eligió no enviar un correo real; queda pendiente completar el restablecimiento con un entorno SMTP de pruebas controlado o con un buzón autorizado.
 2. Probar administración de roles/estado con una sesión autorizada de administrador. El estudiante dice haber iniciado sesión, pero el navegador de pruebas accesible desde Visual Studio sigue en la pantalla de login; verificar en el mismo contexto antes de editar el usuario ficticio y no modificar al último administrador.
 3. Cerrar y volver a abrir el navegador para completar la persistencia de «Recordarme».
-4. Consultar el rol almacenado de la cuenta registrada.
