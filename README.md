@@ -93,6 +93,6 @@ Este repositorio implementa el módulo de autenticación segura y su administrac
 
 ## Pruebas y entrega académica
 
-La compilación de `MotorCare.Web.csproj` pasó en Visual Studio. La matriz de los casos funcionales del documento, con resultados y límites de las pruebas manuales realizadas, está en [`Evidencias-Pruebas-AA01.md`](Evidencias-Pruebas-AA01.md). Todavía quedan casos pendientes: no presentes la matriz como completamente aprobada.
+La compilación de `MotorCare.Web.csproj` pasó en Visual Studio. La matriz de los 14 casos funcionales está en [`Evidencias-Pruebas-AA01.md`](Evidencias-Pruebas-AA01.md): todos tienen resultado aprobado, distinguiendo las pruebas observadas de las reportadas por el estudiante.
 
 El repositorio privado exclusivo de AA01 está publicado en [GitHub](https://github.com/elasluisa-arch/WEB-3AN-B1-AA01-AutenticacionSegura-LasluisaEdison), rama `main`. Incluye el código y migraciones, este README, el script SQL, usuarios ficticios de prueba y el PDF que registra uso de IA/prompts y fuentes. No publiques Secretos de usuario, contraseñas, tokens de recuperación ni datos personales.

@@ -22,10 +22,10 @@
 | 4 | Contraseña incorrecta repetida y bloqueo | **Aprobado** | El tercer intento fallido activa el bloqueo. Se repitió después del ajuste: tanto el intento fallido que activa el bloqueo como el intento con la contraseña correcta mientras seguía bloqueada mostraron exactamente «Correo o contraseña incorrectos». La expiración automática y el acceso posterior ya se habían comprobado antes. |
 | 5 | Solicitud de recuperación por correo real | **Aprobado, reportado por el estudiante** | El estudiante informó el 24 de noviembre que probó correctamente la recuperación por correo. En las pruebas iniciales se observó la respuesta genérica para una dirección inexistente. |
 | 6 | Restablecimiento con token válido | **Aprobado, reportado por el estudiante** | El estudiante informó que la recuperación por correo funcionó. No se observó directamente su prueba ni se solicitaron credenciales o enlaces. |
-| 7 | Token ausente, inválido, vencido o reutilizado | **Parcial** | Un enlace sin token y un token inventado para la cuenta ficticia mostraron «Enlace no válido o vencido» sin cambiar la contraseña. En una prueba anterior el estudiante confirmó el rechazo de un enlace reutilizado. No se esperó la expiración de un token real. |
+| 7 | Token ausente, inválido, vencido o reutilizado | **Aprobado, parcialmente reportado por el estudiante** | Un enlace sin token y un token inventado mostraron «Enlace no válido o vencido» sin cambiar la contraseña. El estudiante confirmó el rechazo de enlaces reutilizados y, el 24 de noviembre, también de un enlace vencido; esos dos casos no se observaron directamente. |
 | 8 | Cliente intenta abrir URL administrativa | **Aprobado** | `/Administracion/Usuarios` mostró «Acceso denegado». |
 | 9 | Administrador modifica rol o estado de una cuenta | **Aprobado, reportado por el estudiante** | El estudiante informó que las pruebas de administración solicitadas funcionaron. La cuenta de Administrador indicada también se había comprobado habilitada en la base local; la prueba en la interfaz no se observó directamente. |
-| 10 | Cliente intenta asignarse privilegios de administrador | **Pendiente** | No hay un flujo público de autoasignación; falta comprobar desde la interfaz que un Cliente recibe acceso denegado a las acciones administrativas. |
+| 10 | Cliente intenta asignarse privilegios de administrador | **Aprobado, reportado por el estudiante** | El estudiante confirmó el 24 de noviembre que probó que un Cliente no puede asignarse el rol Administrador. El intento no se observó directamente; anteriormente se observó acceso denegado a la URL administrativa. |
 | 11 | Cambio de contraseña con clave actual errónea | **Aprobado** | El cambio fue rechazado y luego del ajuste de idioma el mensaje fue «La contraseña actual es incorrecta». Se verificó que aparezca una sola vez en el resumen del formulario y también se confirmó un cambio válido en la cuenta ficticia. |
 | 12 | Actualizar y abrir otra pestaña | **Aprobado, reportado por el estudiante** | El estudiante confirmó que la sesión se comparte en la pestaña normal y no se extiende a incógnito. |
 | 13 | Ventana de incógnito aislada | **Aprobado, reportado por el estudiante** | El estudiante confirmó que incógnito no comparte la sesión de navegación normal. |
@@ -51,7 +51,6 @@ Los dominios reservados `.test` no reciben correo. Estas cuentas se crearon dura
 - El bloqueo expiró automáticamente y la cuenta ficticia pudo iniciar sesión con su contraseña correcta tras el intervalo configurado. Se cerró esa sesión al finalizar la comprobación.
 - Durante las pruebas iniciales no se ejecutó el script SQL, no se cambió la configuración SMTP ni se inició sesión con credenciales de Administrador. Las pruebas posteriores fueron realizadas y reportadas por el estudiante.
 
-## Pendientes para cerrar la matriz
+## Estado de la matriz
 
-1. Confirmar específicamente el rechazo de un token de recuperación vencido; el estudiante reportó previamente el rechazo de un enlace reutilizado.
-2. Comprobar específicamente que un Cliente no pueda ejecutar una acción para asignarse el rol Administrador. La apertura de la URL administrativa ya mostró acceso denegado en la prueba inicial.
+Los 14 casos tienen resultado aprobado, según las pruebas observadas y las confirmaciones del estudiante indicadas en la tabla. Los resultados reportados por el estudiante no fueron observados directamente; no sustituyen las evidencias adicionales que solicite el docente.
