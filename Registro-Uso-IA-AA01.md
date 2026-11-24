@@ -22,8 +22,9 @@ La IA se utilizó como apoyo; el estudiante revisó cambios y reportó pruebas m
 
 La asistencia se enfocó en implementar y documentar el módulo solicitado sin rehacer la página institucional ni el CRUD de mantenimientos:
 
-- **Presentación:** vistas MVC de registro, inicio/cierre de sesión, recuperación de contraseña, perfil, acceso denegado y administración.
-- **Negocio e identidad:** registro, validaciones de contraseña, asignación de Cliente, autenticación, bloqueo temporal, cambio y recuperación de contraseña, roles y autorización.
+- **Presentación:** vistas MVC de registro, inicio/cierre de sesión, recuperación de contraseña, perfil, acceso denegado y administración de usuarios.
+- **Negocio e identidad:** registro público como Cliente, creación administrativa de cuentas Cliente/Administrador, autenticación, bloqueo temporal, cambio y recuperación de contraseña, roles y autorización.
+- **Administración:** editar roles/estado, asignar una contraseña nueva a cuentas ficticias Cliente `@motorcare.test` y eliminar solo cuentas Cliente de ese dominio; no se consultan contraseñas actuales.
 - **Datos e infraestructura:** ASP.NET Core Identity con EF Core/SQL Server, migraciones y servicio de correo SMTP.
 - **Seguridad:** cookies de autenticación, protección antiforgery, protección de rutas, secretos locales y protección del último administrador habilitado.
 - **Entrega:** README e instrucciones SQL, además de este registro.
@@ -38,6 +39,7 @@ Los siguientes ejemplos resumen solicitudes realizadas durante la conversación;
 4. «Añade estilos y un logo antes de cerrar el proyecto».
 5. «Prepara los entregables e instrucciones, pero deja las pruebas restantes para después de terminar el proyecto».
 6. «Coteja el proyecto con el PDF de la actividad e indica qué entregables faltan».
+7. «Agrega al panel de administración la creación de usuarios con rol Cliente o Administrador y el manejo de cuentas ficticias».
 
 ## Correcciones y decisiones realizadas
 
@@ -46,6 +48,8 @@ Los siguientes ejemplos resumen solicitudes realizadas durante la conversación;
 - La configuración SMTP y la cuenta inicial opcional de administrador se documentaron para **Secretos de usuario**; no se deben publicar contraseñas en archivos de configuración ni en GitHub.
 - Se prepararon un README y un script SQL idempotente generado desde las migraciones existentes.
 - Las pruebas manuales detectaron mensajes de Identity en inglés. Se agregó `SpanishIdentityErrorDescriber` y se verificó en la interfaz que las validaciones de contraseña, duplicados y contraseña actual aparezcan en español.
+- Se añadió al panel Administrar usuarios la creación de cuentas con rol Cliente o Administrador, además del cambio de contraseña y eliminación restringidos a cuentas ficticias Cliente `@motorcare.test`. Se compiló la aplicación; estas acciones nuevas aún necesitan pruebas manuales desde una sesión de Administrador.
+- El repositorio privado exclusivo de AA01 se publicó en GitHub. Este repositorio cubre autenticación y administración de usuarios, pero no contiene el CRUD de mantenimientos del proyecto principal del taller.
 - Los resultados observados y los casos aún pendientes se registraron en `Evidencias-Pruebas-AA01.md`; no se presenta la matriz como completamente aprobada.
 
 ## Verificaciones y límites
@@ -53,7 +57,7 @@ Los siguientes ejemplos resumen solicitudes realizadas durante la conversación;
 - La compilación de `MotorCare.Web.csproj` se ejecutó en Visual Studio y terminó correctamente después de los cambios funcionales y de localización.
 - En pruebas manuales locales se confirmó registro, errores por correo duplicado y contraseña débil, inicio/cierre, bloqueo al tercer intento con error genérico, expiración automática tras 15 minutos, protección de `/Perfil` y del área administrativa para un Cliente, guardado de perfil y cambio de contraseña. El detalle por caso y sus limitaciones está en `Evidencias-Pruebas-AA01.md`.
 - La recuperación devolvió el mismo resultado genérico para una dirección inexistente; un token inventado fue rechazado sin cambiar la contraseña. El estudiante había confirmado previamente recepción de un correo de recuperación y rechazo de un enlace reutilizado. En esta sesión no se envió un correo real porque el estudiante lo rechazó; el restablecimiento válido queda pendiente de un entorno SMTP de pruebas controlado o de una autorización futura.
-- El estudiante reportó que la sesión normal se comparte entre pestañas y que incógnito no la hereda; esos casos se marcan como reportados, no verificados desde el navegador de pruebas. Siguen pendientes las acciones administrativas verificadas en la sesión que puede inspeccionar Visual Studio, la persistencia tras reiniciar navegador y la consulta directa del rol almacenado.
+- El estudiante reportó que la sesión normal se comparte entre pestañas y que incógnito no la hereda; esos casos se marcan como reportados, no verificados desde el navegador de pruebas. La consulta SQL de solo lectura confirmó los roles Cliente de las dos cuentas ficticias y el rol Administrador habilitado de la cuenta indicada por el estudiante. Siguen pendientes probar las acciones administrativas nuevas en el navegador y verificar la persistencia de «Recordarme» tras reiniciarlo.
 - La cuenta ficticia de bloqueo pudo iniciar sesión después de que expirara el primer bloqueo. La repetición final del caso la dejó temporalmente bloqueada otra vez en la base local. No se modificaron credenciales de cuentas existentes conocidas.
 - El error repetido de consola se identificó en `/_vs/browserLink`: Chromium informa que la política de permisos bloquea `unload` en Browser Link de Visual Studio; no es una excepción de la aplicación. Chromium también emitió una advertencia de autofill para el formulario de contraseña.
 - Los resultados no representan la matriz completa de aceptación; distinguen compilaciones verificadas, pruebas observadas y pruebas informadas anteriormente por el estudiante.
@@ -70,6 +74,6 @@ Los siguientes ejemplos resumen solicitudes realizadas durante la conversación;
 ## Revisión antes de entregar
 
 - Completar el nombre del estudiante y confirmar que las paráfrasis representan el uso real de IA.
-- Ejecutar y documentar los casos pendientes con cuentas ficticias; conservar evidencia solicitada por el docente.
+- Ejecutar y documentar los casos pendientes con cuentas ficticias; probar la administración desde una sesión autorizada y «Recordarme» después de reiniciar el navegador.
 - No incluir contraseñas, secretos SMTP, tokens, capturas con credenciales ni datos personales.
-- Confirmar el repositorio GitHub nuevo, exclusivo para AA01, y entregar los elementos por el formulario institucional indicado por el docente.
+- El repositorio privado exclusivo de AA01 ya está publicado; entregar los elementos por el formulario institucional indicado por el docente.

@@ -19,7 +19,7 @@
 | 6 | Restablecimiento con token válido | **Pendiente** | Requiere un buzón real de prueba y completar el formulario usando el enlace recibido. |
 | 7 | Token ausente, inválido, vencido o reutilizado | **Parcial** | Un enlace sin token y un token inventado para la cuenta ficticia mostraron «Enlace no válido o vencido» sin cambiar la contraseña. En una prueba anterior el estudiante confirmó el rechazo de un enlace reutilizado. No se esperó la expiración de un token real. |
 | 8 | Cliente intenta abrir URL administrativa | **Aprobado** | `/Administracion/Usuarios` mostró «Acceso denegado». |
-| 9 | Administrador modifica rol o estado de una cuenta | **Pendiente de prueba en interfaz** | La cuenta de Administrador indicada por el estudiante aparece habilitada con ese rol en la base local. El panel tiene acciones para cuentas Cliente ficticias, pero aún no se probaron desde una sesión de administrador. |
+| 9 | Administrador modifica rol o estado de una cuenta | **Pendiente de prueba en interfaz** | La cuenta de Administrador indicada por el estudiante aparece habilitada con ese rol en la base local. El panel permite cambiar roles/estado y se añadieron crear usuarios con cualquiera de los dos roles, cambiar la contraseña de un Cliente ficticio y eliminar ese tipo de cuenta; estas acciones aún requieren prueba manual desde la sesión de Administrador. |
 | 10 | Cliente intenta asignarse privilegios de administrador | **Pendiente** | No hay un flujo público de autoasignación; falta comprobar desde la interfaz que un Cliente recibe acceso denegado a las acciones administrativas. |
 | 11 | Cambio de contraseña con clave actual errónea | **Aprobado** | El cambio fue rechazado y luego del ajuste de idioma el mensaje fue «La contraseña actual es incorrecta». Se verificó que aparezca una sola vez en el resumen del formulario y también se confirmó un cambio válido en la cuenta ficticia. |
 | 12 | Actualizar y abrir otra pestaña | **Aprobado, reportado por el estudiante** | El estudiante confirmó que la sesión se comparte en la pestaña normal y no se extiende a incógnito. |
@@ -38,15 +38,16 @@ Los dominios reservados `.test` no reciben correo. La aplicación se conectó a 
 ## Observaciones de la ejecución
 
 - La compilación de `MotorCare.Web.csproj` terminó correctamente antes y después de localizar los errores de Identity.
-- Una consulta SQL de solo lectura, limitada a las dos cuentas ficticias, confirmó que ambas tienen asignado el rol `Cliente`; no se consultaron hashes de contraseña ni se modificaron datos.
+- Una consulta SQL de solo lectura, limitada a las dos cuentas ficticias, confirmó que ambas tienen asignado el rol `Cliente`; otra consulta confirmó que la cuenta de Administrador indicada por el estudiante está habilitada y tiene ese rol. No se consultaron hashes de contraseña ni se modificaron datos.
+- Se añadieron acciones administrativas protegidas para crear usuarios con rol Cliente o Administrador, asignar una nueva contraseña a un usuario Cliente `@motorcare.test` y eliminar únicamente usuarios Cliente de ese dominio. La compilación pasó; falta validación manual de estas acciones en el navegador.
 - La primera ejecución reveló mensajes de Identity en inglés para correo duplicado, contraseña débil y contraseña actual incorrecta. Se agregó `SpanishIdentityErrorDescriber`; las repeticiones de esas validaciones mostraron mensajes en español.
 - El error repetido de consola se identificó en `/_vs/browserLink`: Chromium informa que la política de permisos bloquea `unload` en Browser Link de Visual Studio. No es una excepción de la aplicación; además Chromium emitió una advertencia de autofill para el formulario de contraseña. No se modificó código de la aplicación por esos avisos del entorno.
 - El primer intento del formulario de cambio de contraseña mostró dos resúmenes para un mismo error; se asoció el error al campo de contraseña actual. La compilación y una prueba posterior confirmaron que ahora aparece una sola vez en el resumen de ese formulario.
 - El bloqueo expiró automáticamente y la cuenta ficticia pudo iniciar sesión con su contraseña correcta tras el intervalo configurado. Se cerró esa sesión al finalizar la comprobación.
-- No se ejecutó el script SQL, no se cambió la configuración SMTP y no se probaron credenciales de administrador.
+- No se ejecutó el script SQL, no se cambió la configuración SMTP ni se inició sesión con credenciales de Administrador.
 
 ## Pendientes para cerrar la matriz
 
 1. El estudiante eligió no enviar un correo real; queda pendiente completar el restablecimiento con un entorno SMTP de pruebas controlado o con un buzón autorizado.
-2. Probar desde la interfaz la edición de roles/estado y las acciones nuevas de cambio de contraseña/eliminación de usuarios ficticios Cliente con una sesión de Administrador. El correo indicado tiene el rol Admin en la base local, pero no se probaron estas acciones; no eliminar la cuenta de Administrador ni cuentas reales.
+2. Probar desde la interfaz crear un usuario Cliente y uno Administrador, editar rol/estado, cambiar la contraseña y eliminar solo una cuenta ficticia Cliente `@motorcare.test`. Estas acciones requieren la sesión de Administrador; no eliminar cuentas reales ni administradores.
 3. Cerrar y volver a abrir el navegador para completar la persistencia de «Recordarme».
