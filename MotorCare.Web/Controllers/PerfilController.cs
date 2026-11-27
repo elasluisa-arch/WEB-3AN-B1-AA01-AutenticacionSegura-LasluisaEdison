@@ -1,55 +1,53 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Motorcare.Data.Entities;
+using MotorCare.Business;
 using MotorCare.Web.Models;
 
 namespace MotorCare.Web.Controllers;
 
 [Authorize]
-public sealed class PerfilController(UserManager<ApplicationUser> userManager) : Controller
+public sealed class PerfilController(IProfileService profileService) : Controller
 {
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        var user = await GetCurrentUserAsync();
-        if (user is null)
-        {
-            return Challenge();
-        }
-
-        return View(new PerfilViewModel
-        {
-            Correo = user.Email ?? string.Empty,
-            FechaRegistro = user.FechaRegistro,
-            NombreCompleto = user.Nombrecompleto
-        });
+        var profile = await profileService.GetProfileAsync(User);
+        return profile is null ? Challenge() : View(ToViewModel(profile));
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Actualizar(PerfilViewModel model)
     {
-        var user = await GetCurrentUserAsync();
-        if (user is null)
+        var profile = await profileService.GetProfileAsync(User);
+        if (profile is null)
         {
             return Challenge();
         }
 
         if (!ModelState.IsValid)
         {
-            model.Correo = user.Email ?? string.Empty;
-            model.FechaRegistro = user.FechaRegistro;
+            PopulateProfile(model, profile);
             return View("Index", model);
         }
 
-        user.Nombrecompleto = model.NombreCompleto.Trim();
-        var result = await userManager.UpdateAsync(user);
+        var result = await profileService.UpdateProfileAsync(User, model.NombreCompleto);
+        if (result is null)
+        {
+            return Challenge();
+        }
+
         if (!result.Succeeded)
         {
             AddIdentityErrors(result);
-            model.Correo = user.Email ?? string.Empty;
-            model.FechaRegistro = user.FechaRegistro;
+            profile = await profileService.GetProfileAsync(User);
+            if (profile is null)
+            {
+                return Challenge();
+            }
+
+            PopulateProfile(model, profile);
             return View("Index", model);
         }
 
@@ -61,41 +59,40 @@ public sealed class PerfilController(UserManager<ApplicationUser> userManager) :
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> CambiarContrasena(CambiarContrasenaViewModel model)
     {
-        var user = await GetCurrentUserAsync();
-        if (user is null)
+        if (!ModelState.IsValid)
+        {
+            var profile = await profileService.GetProfileAsync(User);
+            return profile is null ? Challenge() : View("Index", ToViewModel(profile));
+        }
+
+        var result = await profileService.ChangePasswordAsync(User, model.ContrasenaActual, model.NuevaContrasena);
+        if (result is null)
         {
             return Challenge();
         }
 
-        if (!ModelState.IsValid)
-        {
-            return View("Index", await BuildProfileViewModelAsync(user));
-        }
-
-        var result = await userManager.ChangePasswordAsync(user, model.ContrasenaActual, model.NuevaContrasena);
         if (!result.Succeeded)
         {
             AddIdentityErrors(result, nameof(model.ContrasenaActual));
-            return View("Index", await BuildProfileViewModelAsync(user));
+            var profile = await profileService.GetProfileAsync(User);
+            return profile is null ? Challenge() : View("Index", ToViewModel(profile));
         }
 
         TempData["MensajePerfil"] = "La contraseña se cambió correctamente.";
         return RedirectToAction(nameof(Index));
     }
 
-    private async Task<ApplicationUser?> GetCurrentUserAsync()
+    private static PerfilViewModel ToViewModel(ProfileSummary profile) => new()
     {
-        return await userManager.GetUserAsync(User);
-    }
+        Correo = profile.Correo,
+        FechaRegistro = profile.FechaRegistro,
+        NombreCompleto = profile.NombreCompleto
+    };
 
-    private static Task<PerfilViewModel> BuildProfileViewModelAsync(ApplicationUser user)
+    private static void PopulateProfile(PerfilViewModel model, ProfileSummary profile)
     {
-        return Task.FromResult(new PerfilViewModel
-        {
-            Correo = user.Email ?? string.Empty,
-            FechaRegistro = user.FechaRegistro,
-            NombreCompleto = user.Nombrecompleto
-        });
+        model.Correo = profile.Correo;
+        model.FechaRegistro = profile.FechaRegistro;
     }
 
     private void AddIdentityErrors(IdentityResult result, string key = "")

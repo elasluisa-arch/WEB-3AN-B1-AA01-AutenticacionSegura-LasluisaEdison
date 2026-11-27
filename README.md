@@ -10,10 +10,12 @@ Módulo de autenticación para Ensigma Taller Mecánico, desarrollado con ASP.NE
 
 ## Proyectos
 
-- `MotorCare.Web`: MVC, vistas, autenticación, cookies y autorización.
-- `MotorCare.Business`: contratos de servicios de negocio, incluido `IEmailService`.
+- `MotorCare.Web`: MVC, vistas, validación de formularios, cookies y autorización; los controladores delegan las operaciones de cuenta, administración y perfil a servicios.
+- `MotorCare.Business`: servicios de cuenta, administración de usuarios y perfil, además de contratos como `IEmailService`.
 - `MotorCare.Data`: Identity, `AppDbContext`, entidades y migraciones.
-- `MotorCare.Infrastructure`: implementación SMTP con MailKit.
+- `MotorCare.Infrastructure`: implementación SMTP con MailKit, registrada mediante el contrato de negocio.
+
+Dentro de `MotorCare.Web/Models`, los modelos de vista se agrupan por área: `Administracion`, `Cuenta` y `Perfil`. El modelo de error compartido permanece en la carpeta principal.
 
 ## Preparar SQL Server
 
@@ -95,4 +97,4 @@ Este repositorio implementa el módulo de autenticación segura y su administrac
 
 La compilación de `MotorCare.Web.csproj` pasó en Visual Studio. La matriz de los 14 casos funcionales está en [`Evidencias-Pruebas-AA01.md`](Evidencias-Pruebas-AA01.md): todos tienen resultado aprobado, distinguiendo las pruebas observadas de las reportadas por el estudiante.
 
-El repositorio privado exclusivo de AA01 está publicado en [GitHub](https://github.com/elasluisa-arch/WEB-3AN-B1-AA01-AutenticacionSegura-LasluisaEdison), rama `main`. Incluye el código y migraciones, este README, el script SQL, usuarios ficticios de prueba y el PDF que registra uso de IA/prompts y fuentes. No publiques Secretos de usuario, contraseñas, tokens de recuperación ni datos personales.
+El repositorio exclusivo de AA01 está publicado en [GitHub](https://github.com/elasluisa-arch/WEB-3AN-B1-AA01-AutenticacionSegura-LasluisaEdison), rama `main`. Incluye el código y migraciones, este README, el script SQL, usuarios ficticios de prueba y el PDF que registra uso de IA/prompts y fuentes. No publiques Secretos de usuario, contraseñas, tokens de recuperación ni datos personales.

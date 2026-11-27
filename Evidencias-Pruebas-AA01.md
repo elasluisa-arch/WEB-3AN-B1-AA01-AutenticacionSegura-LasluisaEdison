@@ -4,11 +4,11 @@
 
 **Fecha de pruebas iniciales:** 21 de noviembre de 2026
 
-**Actualización:** 24 de noviembre de 2026
+**Actualización:** 27 de noviembre de 2026
 
 **Entorno inicial:** aplicación local HTTPS (`https://localhost:7023`), SQL Server `edison`, base `MotorCareAuthDb`.
 
-**Método:** pruebas manuales iniciales con cuentas ficticias y resultados adicionales reportados por el estudiante.
+**Método:** pruebas manuales iniciales con cuentas ficticias, resultados reportados por el estudiante y revisión de capturas compartidas posteriormente.
 
 > Se distinguen las pruebas observadas directamente de las reportadas por el estudiante. No se incluyen credenciales ni enlaces de recuperación.
 
@@ -20,8 +20,8 @@
 | 2 | Correo duplicado o contraseña inválida | **Aprobado** | El correo duplicado se rechazó y la contraseña débil no creó una cuenta. Los errores se muestran ahora en español. |
 | 3 | Inicio de sesión válido y logout | **Aprobado** | Inicio correcto; cierre redirigió a Inicio de sesión. Sin sesión, `/Perfil` redirigió al formulario de acceso. El perfil permitió guardar un cambio de nombre ficticio y mostró el dato actualizado. |
 | 4 | Contraseña incorrecta repetida y bloqueo | **Aprobado** | El tercer intento fallido activa el bloqueo. Se repitió después del ajuste: tanto el intento fallido que activa el bloqueo como el intento con la contraseña correcta mientras seguía bloqueada mostraron exactamente «Correo o contraseña incorrectos». La expiración automática y el acceso posterior ya se habían comprobado antes. |
-| 5 | Solicitud de recuperación por correo real | **Aprobado, reportado por el estudiante** | El estudiante informó el 24 de noviembre que probó correctamente la recuperación por correo. En las pruebas iniciales se observó la respuesta genérica para una dirección inexistente. |
-| 6 | Restablecimiento con token válido | **Aprobado, reportado por el estudiante** | El estudiante informó que la recuperación por correo funcionó. No se observó directamente su prueba ni se solicitaron credenciales o enlaces. |
+| 5 | Solicitud de recuperación por correo real | **Aprobado, capturas compartidas por el estudiante** | El 27 de noviembre el estudiante compartió una captura de un correo de recuperación recibido en un buzón real; el mensaje indicaba un enlace y una vigencia de dos horas. La captura original contiene datos personales y debe protegerse antes de adjuntarla. |
+| 6 | Restablecimiento con token válido | **Aprobado, capturas compartidas por el estudiante** | El 27 de noviembre el estudiante compartió capturas de la confirmación «Contraseña actualizada» y de una sesión iniciada; informó que ingresó con la nueva contraseña. Las capturas muestran los resultados, pero no permiten verificar por sí solas la contraseña utilizada. |
 | 7 | Token ausente, inválido, vencido o reutilizado | **Aprobado, parcialmente reportado por el estudiante** | Un enlace sin token y un token inventado mostraron «Enlace no válido o vencido» sin cambiar la contraseña. El estudiante confirmó el rechazo de enlaces reutilizados y, el 24 de noviembre, también de un enlace vencido; esos dos casos no se observaron directamente. |
 | 8 | Cliente intenta abrir URL administrativa | **Aprobado** | `/Administracion/Usuarios` mostró «Acceso denegado». |
 | 9 | Administrador modifica rol o estado de una cuenta | **Aprobado, reportado por el estudiante** | El estudiante informó que las pruebas de administración solicitadas funcionaron. La cuenta de Administrador indicada también se había comprobado habilitada en la base local; la prueba en la interfaz no se observó directamente. |
@@ -42,6 +42,7 @@ Los dominios reservados `.test` no reciben correo. Estas cuentas se crearon dura
 
 ## Observaciones de la ejecución
 
+- Las capturas de recuperación y acceso compartidas el 27 de noviembre se revisaron en la conversación; no están adjuntas a este archivo ni al repositorio. Antes de entregarlas, ocultar direcciones, imágenes de perfil, otros mensajes y cualquier enlace o token de recuperación.
 - La compilación de `MotorCare.Web.csproj` terminó correctamente antes y después de localizar los errores de Identity.
 - Una consulta SQL de solo lectura, limitada a las dos cuentas ficticias, confirmó que ambas tienen asignado el rol `Cliente`; otra consulta confirmó que la cuenta de Administrador indicada por el estudiante está habilitada y tiene ese rol. No se consultaron hashes de contraseña ni se modificaron datos.
 - Se añadieron acciones administrativas protegidas para crear usuarios con rol Cliente o Administrador, asignar una nueva contraseña a un usuario Cliente `@motorcare.test` y eliminar únicamente usuarios Cliente de ese dominio. La compilación pasó; el 24 de noviembre el estudiante reportó que las pruebas de administración funcionaron, sin observación directa de esta sesión.

@@ -14,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddData(builder.Configuration);
+builder.Services.AddBusiness();
 builder.Services
     .AddIdentity<ApplicationUser, IdentityRole>(options =>
     {

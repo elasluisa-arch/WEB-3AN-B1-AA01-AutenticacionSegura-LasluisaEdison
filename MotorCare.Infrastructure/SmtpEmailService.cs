@@ -29,16 +29,28 @@ public sealed class SmtpEmailService(IOptions<SmtpOptions> options) : IEmailServ
             TextBody = textBody
         }.ToMessageBody();
 
-        using var client = new SmtpClient();
-        await client.ConnectAsync(_options.Host, _options.Port, SecureSocketOptions.StartTls, cancellationToken);
-        await client.AuthenticateAsync(_options.UserName, _options.Password, cancellationToken);
-        var result = await client.SendAsync(MimeKit.FormatOptions.Default, new MailKit.SendRequest(message), cancellationToken);
-        if (result.AcceptedRecipients.Count == 0)
+        try
         {
-            throw new InvalidOperationException("El servidor SMTP no aceptó al destinatario del correo.");
-        }
+            using var client = new SmtpClient();
+            await client.ConnectAsync(_options.Host, _options.Port, SecureSocketOptions.StartTls, cancellationToken);
+            await client.AuthenticateAsync(_options.UserName, _options.Password, cancellationToken);
+            var result = await client.SendAsync(MimeKit.FormatOptions.Default, new MailKit.SendRequest(message), cancellationToken);
+            if (result.AcceptedRecipients.Count == 0)
+            {
+                throw new InvalidOperationException("El servidor SMTP no aceptó al destinatario del correo.");
+            }
 
-        await client.DisconnectAsync(true, cancellationToken);
+            await client.DisconnectAsync(true, cancellationToken);
+        }
+        catch (Exception exception) when (exception is MailKit.ProtocolException
+            or MailKit.CommandException
+            or MailKit.ServiceNotConnectedException
+            or MailKit.ServiceNotAuthenticatedException
+            or System.Security.Authentication.AuthenticationException
+            or IOException)
+        {
+            throw new EmailDeliveryException("No se pudo enviar el correo mediante SMTP.", exception);
+        }
     }
 
     private void ValidateConfiguration()

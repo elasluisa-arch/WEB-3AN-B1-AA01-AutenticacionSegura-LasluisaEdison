@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MotorCare.Data\MotorCare.Data.csproj" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
   <PropertyGroup>

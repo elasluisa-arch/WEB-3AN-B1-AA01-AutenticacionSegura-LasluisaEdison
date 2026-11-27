@@ -1,12 +1,15 @@
 # Registro de uso de IA, prompts y fuentes — AA01
 
 **Asignatura:** Programación Web I  
-**Actividad:** AA01 — Módulo integral de autenticación y seguridad  
-**Estudiante:** [Completar nombre y apellido]  
-**Proyecto:** MotorCare — Ensigma Taller Mecánico  
+**Actividad:** AA01 — Módulo integral de autenticación y seguridad<br>
+**Estudiante:** Edison Rafael Lasluisa Gualoto<br>
+**Nivel/paralelo:** Tercero A — 3AN<br>
+**Carrera:** Desarrollo de Software<br>
+**Jornada:** Nocturna<br>
+**Proyecto:** MotorCare — Ensigma Taller Mecánico<br>
 **Fecha de elaboración de este registro:** 21 de noviembre de 2026
 
-> Este registro resume la asistencia recibida durante el desarrollo. Los prompts de ejemplo se presentan como paráfrasis representativas, no como una transcripción literal completa. El estudiante debe revisar el documento y completar sus datos antes de entregarlo.
+> Este registro resume la asistencia recibida durante el desarrollo. Los prompts de ejemplo se presentan como paráfrasis representativas, no como una transcripción literal completa. El estudiante debe revisar el documento y confirmar que su contenido representa fielmente el trabajo realizado antes de entregarlo.
 
 ## Herramientas utilizadas
 
@@ -49,7 +52,7 @@ Los siguientes ejemplos resumen solicitudes realizadas durante la conversación;
 - Se prepararon un README y un script SQL idempotente generado desde las migraciones existentes.
 - Las pruebas manuales detectaron mensajes de Identity en inglés. Se agregó `SpanishIdentityErrorDescriber` y se verificó en la interfaz que las validaciones de contraseña, duplicados y contraseña actual aparezcan en español.
 - Se añadió al panel Administrar usuarios la creación de cuentas con rol Cliente o Administrador, además del cambio de contraseña y eliminación restringidos a cuentas ficticias Cliente `@motorcare.test`. Se compiló la aplicación; el 24 de noviembre el estudiante reportó que las pruebas de administración funcionaron.
-- El repositorio privado exclusivo de AA01 se publicó en GitHub. Este repositorio cubre autenticación y administración de usuarios, pero no contiene el CRUD de mantenimientos del proyecto principal del taller.
+- El repositorio exclusivo de AA01 se publicó en GitHub. Este repositorio cubre autenticación y administración de usuarios, pero no contiene el CRUD de mantenimientos del proyecto principal del taller.
 - Los 14 casos se registraron como aprobados en `Evidencias-Pruebas-AA01.md`, distinguiendo las pruebas observadas de las confirmadas por el estudiante.
 
 ## Verificaciones y límites
@@ -73,7 +76,7 @@ Los siguientes ejemplos resumen solicitudes realizadas durante la conversación;
 
 ## Revisión antes de entregar
 
-- Completar el nombre del estudiante y confirmar que las paráfrasis representan el uso real de IA.
+- Confirmar que las paráfrasis representan el uso real de IA.
 - Conservar las evidencias que solicite el docente y revisar la matriz de pruebas, distinguiendo los resultados reportados por el estudiante.
 - No incluir contraseñas, secretos SMTP, tokens, capturas con credenciales ni datos personales.
-- El repositorio privado exclusivo de AA01 ya está publicado; entregar los elementos por el formulario institucional indicado por el docente.
+- El repositorio exclusivo de AA01 ya está publicado; entregar los elementos por el formulario institucional indicado por el docente.

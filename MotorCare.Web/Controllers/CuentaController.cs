@@ -1,22 +1,12 @@
-using System.IO;
-using System.Security.Authentication;
-using System.Text.Encodings.Web;
-using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Motorcare.Data.Constants;
-using Motorcare.Data.Entities;
 using MotorCare.Business;
 using MotorCare.Web.Models;
 
 namespace MotorCare.Web.Controllers;
 
-public sealed class CuentaController(
-    UserManager<ApplicationUser> userManager,
-    SignInManager<ApplicationUser> signInManager,
-    IEmailService emailService,
-    ILogger<CuentaController> logger) : Controller
+public sealed class CuentaController(IAccountService accountService) : Controller
 {
     [AllowAnonymous]
     [HttpGet]
@@ -35,40 +25,13 @@ public sealed class CuentaController(
             return View(model);
         }
 
-        var user = new ApplicationUser
+        var result = await accountService.RegisterAsync(model.NombreCompleto, model.Correo, model.Contrasena);
+        if (!result.Succeeded)
         {
-            Nombrecompleto = model.NombreCompleto.Trim(),
-            UserName = model.Correo.Trim(),
-            Email = model.Correo.Trim(),
-            Habilitado = true,
-            FechaRegistro = DateTime.UtcNow
-        };
-
-        var createResult = await userManager.CreateAsync(user, model.Contrasena);
-        if (!createResult.Succeeded)
-        {
-            foreach (var error in createResult.Errors)
-            {
-                ModelState.AddModelError(string.Empty, error.Description);
-            }
-
+            AddIdentityErrors(result);
             return View(model);
         }
 
-        var roleResult = await userManager.AddToRoleAsync(user, Roles.Cliente);
-        if (!roleResult.Succeeded)
-        {
-            var deleteResult = await userManager.DeleteAsync(user);
-            var roleError = string.Join("; ", roleResult.Errors.Select(error => error.Description));
-            var cleanupError = deleteResult.Succeeded
-                ? string.Empty
-                : $" Además, no se pudo eliminar la cuenta incompleta: {string.Join("; ", deleteResult.Errors.Select(error => error.Description))}";
-
-            throw new InvalidOperationException(
-                $"No se pudo asignar el rol Cliente a la cuenta registrada. {roleError}{cleanupError}");
-        }
-
-        await signInManager.SignInAsync(user, isPersistent: false);
         return RedirectToAction("Index", "Home");
     }
 
@@ -91,19 +54,7 @@ public sealed class CuentaController(
             return View(model);
         }
 
-        var user = await userManager.FindByEmailAsync(model.Correo.Trim());
-        if (user is null || !user.Habilitado)
-        {
-            ModelState.AddModelError(string.Empty, "Correo o contraseña incorrectos.");
-            return View(model);
-        }
-
-        var result = await signInManager.PasswordSignInAsync(
-            user,
-            model.Contrasena,
-            model.Recordarme,
-            lockoutOnFailure: true);
-
+        var result = await accountService.SignInAsync(model.Correo, model.Contrasena, model.Recordarme);
         if (result.Succeeded)
         {
             if (Url.IsLocalUrl(returnUrl))
@@ -112,13 +63,6 @@ public sealed class CuentaController(
             }
 
             return RedirectToAction("Index", "Home");
-        }
-
-        if (result.IsLockedOut)
-        {
-            logger.LogWarning("Se rechazó el inicio de sesión porque la cuenta {UserId} está bloqueada.", user.Id);
-            ModelState.AddModelError(string.Empty, "Correo o contraseña incorrectos.");
-            return View(model);
         }
 
         ModelState.AddModelError(string.Empty, "Correo o contraseña incorrectos.");
@@ -130,7 +74,7 @@ public sealed class CuentaController(
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> CerrarSesion()
     {
-        await signInManager.SignOutAsync();
+        await accountService.SignOutAsync();
         return RedirectToAction(nameof(IniciarSesion));
     }
 
@@ -151,47 +95,14 @@ public sealed class CuentaController(
             return View(model);
         }
 
-        var user = await userManager.FindByEmailAsync(model.Correo.Trim());
-        if (user is not null && user.Habilitado && !string.IsNullOrWhiteSpace(user.Email))
-        {
-            var token = await userManager.GeneratePasswordResetTokenAsync(user);
-            var resetUrl = Url.Action(
+        await accountService.RequestPasswordResetAsync(
+            model.Correo,
+            (email, token) => Url.Action(
                 nameof(RestablecerContrasena),
                 "Cuenta",
-                new { correo = user.Email, token },
-                protocol: Request.Scheme);
-
-            if (string.IsNullOrWhiteSpace(resetUrl))
-            {
-                throw new InvalidOperationException("No se pudo generar el enlace de recuperación.");
-            }
-
-            var safeName = HtmlEncoder.Default.Encode(user.Nombrecompleto);
-            var safeUrl = HtmlEncoder.Default.Encode(resetUrl);
-            var htmlBody = $"<p>Hola {safeName},</p><p>Para restablecer tu contraseña de MotorCare, abre este enlace:</p><p><a href=\"{safeUrl}\">Restablecer contraseña</a></p><p>El enlace vence en dos horas. Si no solicitaste este cambio, ignora este mensaje.</p>";
-            const string textBody = "Recibimos una solicitud para restablecer tu contraseña de MotorCare. Usa el enlace de este correo. El enlace vence en dos horas. Si no solicitaste este cambio, ignora este mensaje.";
-
-            try
-            {
-                await emailService.SendAsync(
-                    user.Email,
-                    "Restablecer contraseña de MotorCare",
-                    htmlBody,
-                    textBody,
-                    cancellationToken);
-            }
-            catch (Exception exception) when (exception is MailKit.ProtocolException
-                or MailKit.CommandException
-                or MailKit.ServiceNotConnectedException
-                or MailKit.ServiceNotAuthenticatedException
-                or AuthenticationException
-                or IOException
-                or InvalidOperationException
-                or FormatException)
-            {
-                logger.LogError(exception, "No se pudo enviar el correo de recuperación para la cuenta {UserId}.", user.Id);
-            }
-        }
+                new { correo = email, token },
+                protocol: Request.Scheme),
+            cancellationToken);
 
         return RedirectToAction(nameof(RecuperacionSolicitada));
     }
@@ -225,19 +136,13 @@ public sealed class CuentaController(
             return View(model);
         }
 
-        var user = await userManager.FindByEmailAsync(model.Correo.Trim());
-        if (user is null || !user.Habilitado)
-        {
-            return View("EnlaceRecuperacionInvalido");
-        }
-
-        var result = await userManager.ResetPasswordAsync(user, model.Token, model.NuevaContrasena);
-        if (!result.Succeeded)
-        {
-            return View("EnlaceRecuperacionInvalido");
-        }
-
-        return View("ContrasenaRestablecida");
+        var resetSucceeded = await accountService.ResetPasswordAsync(
+            model.Correo,
+            model.Token,
+            model.NuevaContrasena);
+        return resetSucceeded
+            ? View("ContrasenaRestablecida")
+            : View("EnlaceRecuperacionInvalido");
     }
 
     [AllowAnonymous]
@@ -245,5 +150,13 @@ public sealed class CuentaController(
     public IActionResult AccesoDenegado()
     {
         return View();
+    }
+
+    private void AddIdentityErrors(IdentityResult result)
+    {
+        foreach (var error in result.Errors)
+        {
+            ModelState.AddModelError(string.Empty, error.Description);
+        }
     }
 }
